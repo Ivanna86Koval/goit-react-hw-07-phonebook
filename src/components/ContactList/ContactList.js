@@ -8,18 +8,26 @@ export const ContactList = () => {
   const contacts = useSelector(selectVisibleContacts);
   const dispatch = useDispatch();
 
+  // const onGetText = () => {
+  //   const normalizedFilter = search.toLowerCase().trim();
+  //   return contacts.filter(item => {
+  //     return item.name.toLowerCase().includes(normalizedFilter);
+  //   });
+  // };
+
   return (
     <List>
-       {contacts.map(contact => (
+      {contacts.map(contact => (
         <Item key={contact.id}>
-       {contact.name + ' : ' + contact.number}
+          {contact.name + ' : ' + contact.phone}
           {
-          <ListItemBtn
-            type="button"
-            onClick={() => dispatch(deleteContacts(contact.id))}
-          >
-            Delete
-          </ListItemBtn>}
+            <ListItemBtn
+              type="button"
+              onClick={() => dispatch(deleteContacts(contact.id))}
+            >
+              Delete
+            </ListItemBtn>
+          }
         </Item>
       ))}
     </List>

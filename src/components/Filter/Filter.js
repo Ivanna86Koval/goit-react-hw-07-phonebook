@@ -1,7 +1,7 @@
 import { FilterDiv, FilterLabel, FilterName } from './Filter.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectFilter } from 'redux/selector';
-import {changeFilterValue} from 'redux/filterSlice'
+import {filterValue} from 'redux/filterSlice'
 
 export const Filter = () => {
   const value = useSelector(selectFilter);
@@ -10,7 +10,7 @@ export const Filter = () => {
   const onChange = event => {
     const normalizedValue = event.target.value.toLowerCase();
 
-    dispatch(changeFilterValue(normalizedValue));
+    dispatch(filterValue(normalizedValue));
   };
 
 return (

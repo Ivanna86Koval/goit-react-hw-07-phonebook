@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { nanoid } from '@reduxjs/toolkit';
 import { addContacts } from 'redux/operation';
 import { selectContacts } from 'redux/selector';
 import { Form, Label, FormItem, FormBtn } from './AddContactForm.styled';
-
-
-//const nameInputId = nanoid();
-//const numberInputId = nanoid();
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AddContactForm = () => {
   const [name, setName] = useState('');
@@ -19,11 +16,15 @@ export const AddContactForm = () => {
   const handleSubmit = event => {
     event.preventDefault();
 
-  const checkNewContact = contacts.some(
-  contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
-    );
+    // const checkNewContact = contacts.some(contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
+    // );
+    const checkNewContact = contacts.some(contact => {
+      return contact.name.trim() === name.trim();
+    });
     if (checkNewContact) {
-      alert(`${name} is already in contacts`);
+      toast.success(`${name} is already in contacts `, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       return;
     }
 
@@ -52,26 +53,27 @@ export const AddContactForm = () => {
       <Form onSubmit={handleSubmit}>
         <Label>Name</Label>
         <FormItem
-           type="text"
-           name="name"
-           value={name}
-           onChange={handleChange}
-           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-           required
-         />
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+        />
         <Label>Number</Label>
         <FormItem
-           type="tel"
-           name="number"
-           value={number}
-           onChange={handleChange}
-           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-           required
-         />
+          type="tel"
+          name="number"
+          value={number}
+          onChange={handleChange}
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+        />
         <FormBtn type="submit">Add contact</FormBtn>
-        </Form>
+        <ToastContainer />
+      </Form>
     </div>
   );
 };
