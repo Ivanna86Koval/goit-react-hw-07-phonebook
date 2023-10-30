@@ -6,6 +6,11 @@ export const Container = styled.div`
   margin: 0 auto;
 `;
 
+export const Wrapper = styled.div`
+  text-align: center;
+  font-size: 20px;
+`;
+
 export const Title = styled.h1`
   text-align: center;
 `;

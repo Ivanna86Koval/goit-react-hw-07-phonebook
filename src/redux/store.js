@@ -1,9 +1,5 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { contactsReducer } from './contactsSlice';
-import { filtersReducer } from './filterSlice';
+import { configureStore } from '@reduxjs/toolkit';
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -11,29 +7,21 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-  
-const persistConfig = {
-  key: 'root',
-  storage,
-  };
-  
-  const rootReducer = combineReducers({
-    contacts: contactsReducer,
-    filter: filtersReducer,
-  });
-  
-  const persistedReducer = persistReducer(persistConfig, rootReducer);
-  
-  export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: getDefaultMiddleware =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
-      }),
-  });
-  
-  export const persistor = persistStore(store);
+import { contactsReducer } from './contactsSlice';
+import { filterReducer } from './filterSlice';
 
+// Створення сховища Redux за допомогою configureStore
+export const store = configureStore({
+  reducer: {
+    contacts: contactsReducer, // Редюсер для керування станом контактів
+    filter: filterReducer, // Редюсер для керування станом фільтра
+  },
+
+  // Застосування middleware за допомогою getDefaultMiddleware
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});

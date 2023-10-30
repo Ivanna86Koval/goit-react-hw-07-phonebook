@@ -1,73 +1,79 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+//import { nanoid } from '@reduxjs/toolkit';
+import { addContacts } from 'redux/operation';
+import { selectContacts } from 'redux/selector';
 import { Form, Label, FormItem, FormBtn } from './AddContactForm.styled';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+
+//const nameInputId = nanoid();
+//const numberInputId = nanoid();
 
 export const AddContactForm = () => {
-  const contacts = useSelector(state => state.contacts);
-
-  const dispatch = useDispatch();
-
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const changeInput = e => {
-    switch (e.target.name) {
-      case 'name':
-        return setName(e.currentTarget.value);
-      case 'number':
-        return setNumber(e.currentTarget.value);
-      default:
-        break;
-    }
-  };
+  const contacts = useSelector(selectContacts);
+  const dispatch = useDispatch();
 
-  const handleFormSubmit = e => {
-    e.preventDefault();
-    const checkNewContact = contacts.some(item => {
-      return item.name.trim() === name.trim();
-    });
+  const handleSubmit = event => {
+    event.preventDefault();
+
+  const checkNewContact = contacts.some(
+  contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
     if (checkNewContact) {
-      toast.success(`${name} is already in book contacts `, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      alert(`${name} is already in contacts`);
       return;
     }
-    dispatch(addContact({ name, number }));
+
+    dispatch(addContacts({ name, number }));
     setName('');
     setNumber('');
   };
 
+  const handleChange = event => {
+    const { name, value } = event.target;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
+  };
+
   return (
     <div>
-      <Form onSubmit={handleFormSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Label>Name</Label>
         <FormItem
-          type="text"
-          name="name"
-          onChange={changeInput}
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          required
-          placeholder="Enter name"
-          value={name}
-        />
+           type="text"
+           name="name"
+           value={name}
+           onChange={handleChange}
+           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+           required
+         />
         <Label>Number</Label>
         <FormItem
-          type="tel"
-          name="number"
-          onChange={changeInput}
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          required
-          placeholder="Enter phone number"
-          value={number}
-        />
+           type="tel"
+           name="number"
+           value={number}
+           onChange={handleChange}
+           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+           required
+         />
         <FormBtn type="submit">Add contact</FormBtn>
-        <ToastContainer />
-      </Form>
+        </Form>
     </div>
   );
 };
+
+export default AddContactForm;
